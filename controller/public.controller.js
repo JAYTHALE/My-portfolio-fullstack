@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler")
+const Validator = require("validator")
 const Projects = require("../models/Projects")
 const Carousel = require("../models/Carousel")
 const Contact = require("../models/Contact")
@@ -24,10 +25,10 @@ exports.addContact = asyncHandler(async (req, res) => {
     if (isError) {
         return res.status(400).json({ message: "ALL Feilds Required.", error: error })
     }
-    if (!validator.isEmail(email)) {
+    if (!Validator.isEmail(email)) {
         return res.status(400).json({ message: "Invalid Email" })
     }
-    if (!validator.isMobilePhone(mobile, "en-IN")) {
+    if (!Validator.isMobilePhone(mobile, "en-IN")) {
         return res.status(400).json({ message: "Invalid Mobile" })
     }
     await sendEmail({
