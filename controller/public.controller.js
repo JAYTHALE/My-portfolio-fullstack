@@ -3,6 +3,7 @@ const Projects = require("../models/Projects")
 const Carousel = require("../models/Carousel")
 const Contact = require("../models/Contact")
 const { checkEmpty } = require("../utils/cheackEmpty")
+const sendEmail = require("../utils/email")
 
 exports.fetchProjects = asyncHandler(async (req, res) => {
     const result = await Projects.find()
@@ -23,6 +24,22 @@ exports.addContact = asyncHandler(async (req, res) => {
     if (isError) {
         return res.status(400).json({ message: "ALL Feilds Required.", error: error })
     }
+    if (!Validator.isEmail(email)) {
+        return res.status(400).json({ message: "Invalid Email" })
+    }
+    if (!Validator.isMobilePhone(mobile, "en-IN")) {
+        return res.status(400).json({ message: "Invalid Mobile" })
+    }
+    sendEmail({
+        to: "jaythale02@gmail.com",
+        message: `compny${company},email${email},mobile${mobile},message${message}`,
+        subject: `new Enquery From${company}`
+    })
+    sendEmail({
+        to: email,
+        message: `thank you for enquery.`,
+        subject: `thank you for your intrest`
+    })
     await Contact.create({ name, email, mobile, company, message })
     res.json({ message: "Contact Create Success" })
 })
