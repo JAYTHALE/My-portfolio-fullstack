@@ -24,18 +24,18 @@ exports.addContact = asyncHandler(async (req, res) => {
     if (isError) {
         return res.status(400).json({ message: "ALL Feilds Required.", error: error })
     }
-    if (!Validator.isEmail(email)) {
+    if (!validator.isEmail(email)) {
         return res.status(400).json({ message: "Invalid Email" })
     }
-    if (!Validator.isMobilePhone(mobile, "en-IN")) {
+    if (!validator.isMobilePhone(mobile, "en-IN")) {
         return res.status(400).json({ message: "Invalid Mobile" })
     }
-    sendEmail({
+    await sendEmail({
         to: "jaythale02@gmail.com",
         message: `compny${company},email${email},mobile${mobile},message${message}`,
         subject: `new Enquery From${company}`
     })
-    sendEmail({
+    await sendEmail({
         to: email,
         message: `thank you for enquery.`,
         subject: `thank you for your intrest`
